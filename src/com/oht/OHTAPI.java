@@ -16,7 +16,7 @@ public class OHTAPI {
     //<editor-fold desc="CONSTRUCTOR / PROPERTIES"
 
     private static String baseUrl = "http://www.onehourtranslation.com/api/2";
-    private static String baseUrl_sandbox = "http://www.sandbox.onehourtranslation.com/api/2";
+    private static String baseUrl_sandbox = "http://sandbox4.onehourtranslation.com/api/2";
 
     private String secretKey = "";
     private String publicKey = "";
@@ -95,6 +95,24 @@ public class OHTAPI {
     }
 
     /**
+     * Create a new text resource on One Hour Translation
+     *
+     * @param text       Desired text to upload.
+
+     * @return resource UUID
+     * @throws OHTException
+     */
+    public String uploadTextResource(String text) throws OHTException {
+        Request request
+                = request("/resources/text")
+                .param("text", text);
+
+        JsonArray array = request.post().getAsJsonArray();
+
+        return array.get(0).getAsString();
+    }
+
+    /**
      * Provides information regarding a specific resource
      *
      * @param resourceUuid UUID of resource
@@ -144,14 +162,14 @@ public class OHTAPI {
      * @return {@link Quote Quote} object
      */
     public Quote getQuote
-            (String[] resources
-            , int wordCount
-            , String sourceLang
-            , String targetLang
-            , String service
-            , String expertise
-            , String proofreading
-            , String currency) throws OHTException {
+            (String[] resources,
+            int wordCount,
+            String sourceLang,
+            String targetLang,
+            String service,
+            String expertise,
+            String proofreading,
+            String currency) throws OHTException {
 
         Request request
             = request("/tools/quote")
@@ -196,37 +214,21 @@ public class OHTAPI {
      * @param expertise      (optional)
      * @param callbackUrl    (optional)
      * @param name           (optional) name your project. If empty, your project will be named automatically.
-     * @param custom0        (optional)
-     * @param custom1        (optional)
-     * @param custom2        (optional)
-     * @param custom3        (optional)
-     * @param custom4        (optional)
-     * @param custom5        (optional)
-     * @param custom6        (optional)
-     * @param custom7        (optional)
-     * @param custom8        (optional)
-     * @param custom9        (optional)
+     * @param reference_resources (optional) array of reference resource UUIDs
+     * @param custom         (optional) array of custom fields
      * @return {@link Project Project} object
      */
     public Project createTranslationProject
-            (String sourceLanguage
-            , String targetLanguage
-            , String[] resources
-            , Integer wordCount
-            , String notes
-            , String expertise
-            , String callbackUrl
-            , String name
-            , String custom0
-            , String custom1
-            , String custom2
-            , String custom3
-            , String custom4
-            , String custom5
-            , String custom6
-            , String custom7
-            , String custom8
-            , String custom9) throws OHTException {
+            (String sourceLanguage,
+             String targetLanguage,
+             String[] resources,
+             Integer wordCount,
+             String notes,
+             String expertise,
+             String callbackUrl,
+             String name,
+             String[] reference_resources,
+             String[] custom) throws OHTException {
 
         Request request
             = request("/projects/translation")
@@ -235,19 +237,22 @@ public class OHTAPI {
                 .param("sources", resources)
                 .param("wordcount", wordCount)
                 .param("notes", notes)
-                .param("expertise", expertise)
                 .param("callback_url", callbackUrl)
-                .param("custom0", custom0)
-                .param("custom1", custom1)
-                .param("custom2", custom2)
-                .param("custom3", custom3)
-                .param("custom4", custom4)
-                .param("custom5", custom5)
-                .param("custom6", custom6)
-                .param("custom7", custom7)
-                .param("custom8", custom8)
-                .param("custom9", custom9)
                 .param("name", name);
+
+        if (expertise != null && !expertise.equals("")){
+            request.param("expertise", expertise);
+        }
+
+        if(reference_resources != null){
+            request.param("reference_resources", reference_resources);
+        }
+
+        if(custom != null){
+            for(int i = 0; i < custom.length; i++){
+                request.param("custom"+String.valueOf(i), custom[i]);
+            }
+        }
 
         JsonElement json = request.post();
 
@@ -264,36 +269,20 @@ public class OHTAPI {
      * @param expertise      (optional)
      * @param callbackUrl    (optional)
      * @param name           (optional) name your project. If empty, your project will be named automatically.
-     * @param custom0        (optional)
-     * @param custom1        (optional)
-     * @param custom2        (optional)
-     * @param custom3        (optional)
-     * @param custom4        (optional)
-     * @param custom5        (optional)
-     * @param custom6        (optional)
-     * @param custom7        (optional)
-     * @param custom8        (optional)
-     * @param custom9        (optional)
+     * @param reference_resources (optional) array of reference resource UUIDs
+     * @param custom        (optional) array of custom fields
      * @return {@link Project Project} object
      */
     public Project createProofreadingProject
-            (String sourceLanguage
-            , String[] sources
-            , Integer wordCount
-            , String notes
-            , String expertise
-            , String callbackUrl
-            , String name
-            , String custom0
-            , String custom1
-            , String custom2
-            , String custom3
-            , String custom4
-            , String custom5
-            , String custom6
-            , String custom7
-            , String custom8
-            , String custom9) throws OHTException {
+            (String sourceLanguage,
+             String[] sources,
+             Integer wordCount,
+             String notes,
+             String expertise,
+             String callbackUrl,
+             String name,
+             String[] reference_resources,
+             String[] custom) throws OHTException {
 
         Request request
             = request("/projects/proof-general")
@@ -303,17 +292,17 @@ public class OHTAPI {
                 .param("notes", notes)
                 .param("expertise", expertise)
                 .param("callback_url", callbackUrl)
-                .param("custom0", custom0)
-                .param("custom1", custom1)
-                .param("custom2", custom2)
-                .param("custom3", custom3)
-                .param("custom4", custom4)
-                .param("custom5", custom5)
-                .param("custom6", custom6)
-                .param("custom7", custom7)
-                .param("custom8", custom8)
-                .param("custom9", custom9)
                 .param("name", name);
+
+        if(custom != null){
+            for(int i = 0; i < custom.length; i++){
+                request.param("custom"+String.valueOf(i), custom[i]);
+            }
+        }
+
+        if(reference_resources != null){
+            request.param("reference_resources", reference_resources);
+        }
 
         JsonElement json = request.post();
 
@@ -331,37 +320,22 @@ public class OHTAPI {
      * @param notes          (optional) text note that will be shown to translator regarding the newly project
      * @param callbackUrl    (optional)
      * @param name           (optional) name your project. If empty, your project will be named automatically.
-     * @param custom0        (optional)
-     * @param custom1        (optional)
-     * @param custom2        (optional)
-     * @param custom3        (optional)
-     * @param custom4        (optional)
-     * @param custom5        (optional)
-     * @param custom6        (optional)
-     * @param custom7        (optional)
-     * @param custom8        (optional)
-     * @param custom9        (optional)
+     * @param reference_resources (optional) array of reference resource UUIDs
+     * @param custom        (optional) array of custom fields
      * @return {@link Project Project} object
      */
     public Project createProofTranslatedProject
-            (String sourceLanguage
-            , String targetLanguage
-            , String[] sources
-            , String[] translations
-            , Integer wordCount
-            , String notes
-            , String callbackUrl
-            , String name
-            , String custom0
-            , String custom1
-            , String custom2
-            , String custom3
-            , String custom4
-            , String custom5
-            , String custom6
-            , String custom7
-            , String custom8
-            , String custom9) throws OHTException {
+            (String sourceLanguage,
+             String targetLanguage,
+             String[] sources,
+             String[] translations,
+             Integer wordCount,
+             String notes,
+             String expertise,
+             String callbackUrl,
+             String name,
+             String[] reference_resources,
+             String[] custom) throws OHTException {
 
         Request request
             = request("/projects/proof-translated")
@@ -372,17 +346,21 @@ public class OHTAPI {
                 .param("wordcount", wordCount)
                 .param("notes", notes)
                 .param("callback_url", callbackUrl)
-                .param("custom0", custom0)
-                .param("custom1", custom1)
-                .param("custom2", custom2)
-                .param("custom3", custom3)
-                .param("custom4", custom4)
-                .param("custom5", custom5)
-                .param("custom6", custom6)
-                .param("custom7", custom7)
-                .param("custom8", custom8)
-                .param("custom9", custom9)
                 .param("name", name);
+
+        if (expertise != null && !expertise.equals("")){
+            request.param("expertise", expertise);
+        }
+
+        if(custom != null){
+            for(int i = 0; i < custom.length; i++){
+                request.param("custom"+String.valueOf(i), custom[i]);
+            }
+        }
+
+        if(reference_resources != null){
+            request.param("reference_resources", reference_resources);
+        }
 
         JsonElement json = request.post();
         return new Project(json.getAsJsonObject());
@@ -397,35 +375,19 @@ public class OHTAPI {
      * @param notes          (optional) text note that will be shown to translator regarding the newly project
      * @param callbackUrl    (optional)
      * @param name           (optional) name your project. If empty, your project will be named automatically.
-     * @param custom0        (optional)
-     * @param custom1        (optional)
-     * @param custom2        (optional)
-     * @param custom3        (optional)
-     * @param custom4        (optional)
-     * @param custom5        (optional)
-     * @param custom6        (optional)
-     * @param custom7        (optional)
-     * @param custom8        (optional)
-     * @param custom9        (optional)
+     * @param custom        (optional) array of custom fields
      * @return {@link Project Project} object
      */
     public Project createTranscriptionProject
-            (String sourceLanguage
-            , String[] sources
-            , Integer length
-            , String notes
-            , String callbackUrl
-            , String name
-            , String custom0
-            , String custom1
-            , String custom2
-            , String custom3
-            , String custom4
-            , String custom5
-            , String custom6
-            , String custom7
-            , String custom8
-            , String custom9) throws OHTException {
+            (String sourceLanguage,
+             String[] sources,
+             Integer length,
+             String notes,
+             String expertise,
+             String callbackUrl,
+             String name,
+             String[] reference_resources,
+             String[] custom) throws OHTException {
 
         Request request
             = request("/projects/transcription")
@@ -433,20 +395,77 @@ public class OHTAPI {
                 .param("sources", sources)
                 .param("length", length)
                 .param("notes", notes)
+                .param("expertise", expertise)
                 .param("callback_url", callbackUrl)
-                .param("custom0", custom0)
-                .param("custom1", custom1)
-                .param("custom2", custom2)
-                .param("custom3", custom3)
-                .param("custom4", custom4)
-                .param("custom5", custom5)
-                .param("custom6", custom6)
-                .param("custom7", custom7)
-                .param("custom8", custom8)
-                .param("custom9", custom9)
                 .param("name", name);
 
+        if(custom != null){
+            for(int i = 0; i < custom.length; i++){
+                request.param("custom"+String.valueOf(i), custom[i]);
+            }
+        }
+
+        if(reference_resources != null){
+            request.param("reference_resources", reference_resources);
+        }
+
         JsonElement json = request.post();
+        return new Project(json.getAsJsonObject());
+    }
+
+    /**
+     * Creates translation plus editing project
+     *
+     * @param sourceLanguage source language
+     * @param targetLanguage target language
+     * @param resources      array of Resource UUIDs
+     * @param wordCount      (optional) if empty use automatic counting
+     * @param notes          (optional) text note that will be shown to translator regarding the newly project
+     * @param expertise      (optional)
+     * @param callbackUrl    (optional)
+     * @param name           (optional) name your project. If empty, your project will be named automatically.
+     * @param reference_resources (optional) array of reference resource UUIDs
+     * @param custom         (optional) array of custom fields
+     * @return {@link Project Project} object
+     */
+    public Project createTranslationPlusEditingProject
+    (String sourceLanguage,
+     String targetLanguage,
+     String[] resources,
+     Integer wordCount,
+     String notes,
+     String expertise,
+     String callbackUrl,
+     String name,
+     String[] reference_resources,
+     String[] custom) throws OHTException {
+
+        Request request
+                = request("/projects/transproof")
+                .param("source_language", sourceLanguage)
+                .param("target_language", targetLanguage)
+                .param("sources", resources)
+                .param("wordcount", wordCount)
+                .param("notes", notes)
+                .param("callback_url", callbackUrl)
+                .param("name", name);
+
+        if (expertise != null && !expertise.equals("")){
+            request.param("expertise", expertise);
+        }
+
+        if(reference_resources != null){
+            request.param("reference_resources", reference_resources);
+        }
+
+        if(custom != null){
+            for(int i = 0; i < custom.length; i++){
+                request.param("custom"+String.valueOf(i), custom[i]);
+            }
+        }
+
+        JsonElement json = request.post();
+
         return new Project(json.getAsJsonObject());
     }
 
@@ -529,17 +548,46 @@ public class OHTAPI {
      * Posts a rating for the quality of the translation and service
      *
      * @param projectId project id
-     * @param type      "Customer" or "Service"
+     * @param type      "customer" or "service"
      * @param rate      rating of project (1 - being the lowest; 10 - being the highest)
      * @param remarks   remark left with the rating
+     * @param publish   Allow OneHourTranslation to publish rating on Yotpo. 0 - Don't publish, 1 - Publish
+     * @param additionalRating  (optional) Extra Service / translation rating values provided via checkboxes.
+                                Service rating must provide fields (all are boolean 0 | 1 values):
+                                service_was_on_time - Service on time, or took too long
+                                service_support_helpful - The support was helpful
+                                service_good_quality - The service was with good quality?
+                                service_trans_responded - Slowly / Quickly
+                                service_would_recommend - The site would be recommended
+
+                                Customer rating must provide fields (all are boolean 0 | 1 values):
+                                trans_is_good - Good translation quality
+                                trans_bad_formatting - Bad formatting
+                                trans_misunderstood_source - source misunderstood/misrepresent
+                                trans_spell_tps_grmr_mistakes - Spelling/Typos/Grammer mistakes
+                                trans_text_miss - Missing text / Partly untranslated
+                                trans_not_followed_instrctns - Translator didn't follow instructions
+                                trans_inconsistent - Translation is inconsistent
+                                trans_bad_written - Translation written badly, or too literal
+
+                                Example of passing categories parameters:
+                                rating_type - customer:
+                                {categories[trans_inconsistent]=1, categories[trans_text_miss]=1}
+                                rating_type - service:
+                                {categories[service_good_quality]=0, categories[service_was_on_time]=1}
      * @throws OHTException
      */
-    public void postProjectRating(int projectId, String type, int rate, String remarks) throws OHTException {
-        request(String.format("/projects/%d/rating", projectId))
+    public void postProjectRating(int projectId, String type, int rate, String remarks, int publish, HashMap<String, Integer> additionalRating) throws OHTException {
+        Request request = request(String.format("/projects/%d/rating", projectId))
                 .param("type", type)
                 .param("rate", rate)
                 .param("remarks", remarks)
-                .post();
+                .param("publish", publish);
+
+        for(Map.Entry<String, Integer> e : additionalRating.entrySet()){
+            request.param(e.getKey(), e.getValue());
+        }
+        request.post();
     }
 
     // </editor-fold>
@@ -638,6 +686,41 @@ public class OHTAPI {
             results.add(new Expertise(e.getAsJsonObject()));
 
         return results;
+    }
+
+    /**
+     * Receive tags added to the project
+     *
+     * @param projectId project id
+     * @return Map of tag id and string {@link Tags Comment} objects
+     * @throws OHTException
+     */
+    public Tags getProjectTags(int projectId) throws OHTException {
+        JsonElement json = request(String.format("/project/%d/tag", projectId)).get();
+
+        return new Tags(json.getAsJsonObject());
+    }
+
+    /**
+     * Delete project tag by tag id
+     *
+     * @param projectId project id
+     * @param tagId tag id
+     * @throws OHTException
+     */
+    public void deleteProjectTag(int projectId, int tagId) throws OHTException {
+        request(String.format("/project/%d/tag/%d", projectId, tagId)).delete();
+    }
+
+    /**
+     * Add a new tag to project
+     *
+     * @param projectId project id
+     * @param tag tag string
+     * @throws OHTException
+     */
+    public void addProjectTag(int projectId, String tag) throws OHTException {
+        request(String.format("/project/%d/tag/", projectId)).param("tag_name", tag).post();
     }
 
     //</editor-fold>
@@ -749,6 +832,7 @@ public class OHTAPI {
                     request = new HttpDelete(urlString.toString());
 
                 if (null != this.file) {
+
                     if (method.equalsIgnoreCase("GET")) // file download process
                     {
                         response = httpClient.execute(request);
