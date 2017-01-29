@@ -7,13 +7,18 @@ import com.google.gson.JsonObject;
  */
 public class ResourceQuote {
 
+    private String uuid;
+    private int wordCount;
+    private float credits;
+    private float price;
+
     public ResourceQuote() {
     }
 
     public ResourceQuote(JsonObject json) {
         this();
 
-        this.uuid = json.get("resource_uuid").getAsString();
+        this.uuid = json.get("resource").getAsString();
         this.wordCount = json.get("wordcount").getAsInt();
         this.credits = json.get("credits").getAsFloat();
         this.price = json.get("price").getAsFloat();
@@ -46,9 +51,4 @@ public class ResourceQuote {
     public float getPrice() {
         return price;
     }
-
-    private String uuid;
-    private int wordCount;
-    private float credits;
-    private float price;
 }

@@ -9,21 +9,26 @@ import com.google.gson.JsonObject;
  * */
 public class Expertise {
 
+    private int expertiseId;
+    private String name;
+    private String code;
+
     public Expertise() {
     }
 
     public Expertise(JsonObject json) {
         this();
 
-        this.code = json.get("code").getAsInt();
         this.name = json.get("name").getAsString();
+        this.code = json.get("code").getAsString();
+        this.expertiseId = json.get("expertise_id").getAsInt();
     }
 
     /**
-     * Expertise code
+     * Expertise Id
      */
-    public int getCode() {
-        return code;
+    public int getId() {
+        return expertiseId;
     }
 
     /**
@@ -33,6 +38,10 @@ public class Expertise {
         return name;
     }
 
-    private int code;
-    private String name;
+    /**
+     * Expertise code
+     */
+    public String getCode() {
+        return code;
+    }
 }

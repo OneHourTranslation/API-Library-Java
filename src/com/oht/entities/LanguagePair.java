@@ -14,6 +14,9 @@ import java.util.Map;
  */
 public class LanguagePair {
 
+    private Language source;
+    private Map<Language, String> targets;
+
     public LanguagePair() {
     }
 
@@ -49,7 +52,4 @@ public class LanguagePair {
     public Map<Language, String> getTargets() {
         return targets;
     }
-
-    private Language source;
-    private Map<Language, String> targets;
 }

@@ -12,6 +12,12 @@ import java.util.Date;
  */
 public class Comment implements Comparable<Comment> {
 
+    private int id;
+    private Date date;
+    private String commenterName;
+    private String commenterRole;
+    private String content;
+
     private static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Comment() {
@@ -70,12 +76,6 @@ public class Comment implements Comparable<Comment> {
     public String getContent() {
         return content;
     }
-
-    private int id;
-    private Date date;
-    private String commenterName;
-    private String commenterRole;
-    private String content;
 
     @Override
     public int compareTo(Comment o) {

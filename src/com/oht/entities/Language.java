@@ -9,6 +9,9 @@ import com.google.gson.JsonObject;
  */
 public class Language {
 
+    private String name;
+    private String code;
+
     public Language() {
     }
 
@@ -34,7 +37,4 @@ public class Language {
     public String getCode() {
         return code;
     }
-
-    private String name;
-    private String code;
 }

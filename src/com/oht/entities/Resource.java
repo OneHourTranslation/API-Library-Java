@@ -9,6 +9,13 @@ import com.google.gson.JsonObject;
  * */
 public class Resource {
 
+    private String type;
+    private int length;
+    private String fileName;
+    private String fileMime;
+    private String downloadUrl;
+    private String content;
+
     public Resource() {
     }
 
@@ -17,8 +24,13 @@ public class Resource {
 
         this.type = json.get("type").getAsString();
         this.length = json.get("length").getAsInt();
-        this.fileName = json.get("file_name").getAsString();
-        this.fileMime = json.get("file_mime").getAsString();
+        if(json.has("file_name")) {
+            this.fileName = json.get("file_name").getAsString();
+        }
+        if(json.has("file_mime")){
+            this.fileMime = json.get("file_mime").getAsString();
+        }
+
         this.downloadUrl = json.get("download_url").getAsString();
 
         if (null != json.get("content"))
@@ -64,11 +76,4 @@ public class Resource {
     public String getContent() {
         return content;
     }
-
-    private String type;
-    private int length;
-    private String fileName;
-    private String fileMime;
-    private String downloadUrl;
-    private String content;
 }

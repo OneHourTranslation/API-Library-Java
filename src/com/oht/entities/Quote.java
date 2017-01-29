@@ -13,6 +13,14 @@ import java.util.List;
  */
 public class Quote {
 
+    private String currency;
+    private Collection<ResourceQuote> resources;
+    private int totalWordCount;
+    private float totalCredits;
+    private float netPrice;
+    private float transactionFee;
+    private float totalPrice;
+
     public Quote() {
     }
 
@@ -87,11 +95,4 @@ public class Quote {
         return totalPrice;
     }
 
-    private String currency;
-    private Collection<ResourceQuote> resources;
-    private int totalWordCount;
-    private float totalCredits;
-    private float netPrice;
-    private float transactionFee;
-    private float totalPrice;
 }
