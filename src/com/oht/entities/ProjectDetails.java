@@ -6,11 +6,35 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents detailed specification of the project
  */
 public class ProjectDetails {
+
+    // <editor-fold desc="private members">
+    private int projectId;
+    private String type;
+    private String projectStatus;
+    private String statusCode;
+    private String sourceLanguage;
+    private String targetLanguage;
+    private Collection<String> sources;
+    private Collection<String> translations;
+    private Collection<String> proofs;
+    private Collection<String> transcriptions;
+    private Collection<String> results;
+    private Collection<String> reference;
+    private int wordCount;
+    private int length;
+    private JsonObject custom;
+    private String linguistUuid;
+    private Collection<String> tags;
+    private JsonObject resourceBinding;
+
+    //</editor-fold>
 
     public ProjectDetails() {
     }
@@ -20,7 +44,7 @@ public class ProjectDetails {
 
         this.projectId = json.get("project_id").getAsInt();
         this.type = json.get("project_type").getAsString();
-
+        this.projectStatus = json.get("project_status").getAsString();
         this.statusCode = json.get("project_status_code").getAsString();
         this.sourceLanguage = json.get("source_language").getAsString();
         this.targetLanguage = json.get("target_language").getAsString();
@@ -59,6 +83,30 @@ public class ProjectDetails {
                 for (JsonElement e : array)
                     this.transcriptions.add(e.getAsString());
             }
+
+            // results
+            if (resources.has("results") && resources.get("results").isJsonArray()) {
+                this.results = new ArrayList<String>();
+                JsonArray array = resources.get("results").getAsJsonArray();
+                for (JsonElement e : array)
+                    this.results.add(e.getAsString());
+            }
+
+            // reference
+            if (resources.has("reference") && resources.get("reference").isJsonArray()) {
+                this.reference = new ArrayList<String>();
+                JsonArray array = resources.get("reference").getAsJsonArray();
+                for (JsonElement e : array)
+                    this.reference.add(e.getAsString());
+            }
+
+            // tags
+            if (json.has("tags") && json.get("tags").isJsonArray()) {
+                this.tags = new ArrayList<String>();
+                JsonArray array = json.get("tags").getAsJsonArray();
+                for (JsonElement e : array)
+                    this.tags.add(e.getAsString());
+            }
         }
 
         if (json.has("wordcount"))
@@ -68,18 +116,15 @@ public class ProjectDetails {
             this.length = json.get("length").getAsInt();
 
         if (json.has("custom")) {
-            JsonObject custom = json.get("custom").getAsJsonObject();
+            this.custom = json.get("custom").getAsJsonObject();
+        }
 
-            this.custom0 = custom.get("api_custom_0").getAsString();
-            this.custom1 = custom.get("api_custom_1").getAsString();
-            this.custom2 = custom.get("api_custom_2").getAsString();
-            this.custom3 = custom.get("api_custom_3").getAsString();
-            this.custom4 = custom.get("api_custom_4").getAsString();
-            this.custom5 = custom.get("api_custom_5").getAsString();
-            this.custom6 = custom.get("api_custom_6").getAsString();
-            this.custom7 = custom.get("api_custom_7").getAsString();
-            this.custom8 = custom.get("api_custom_8").getAsString();
-            this.custom9 = custom.get("api_custom_9").getAsString();
+        if (json.has("resource_binding")) {
+            this.resourceBinding = json.get("resource_binding").getAsJsonObject();
+        }
+
+        if (json.has("linguist_uuid") && !json.get("linguist_uuid").isJsonNull()) {
+            this.linguistUuid = json.get("linguist_uuid").getAsString();
         }
     }
 
@@ -95,6 +140,13 @@ public class ProjectDetails {
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * Project status
+     */
+    public String getProjectStatus() {
+        return projectStatus;
     }
 
     /**
@@ -155,10 +207,38 @@ public class ProjectDetails {
     }
 
     /**
+     * List of result resource UUIDs related to the requested project
+     */
+    public Collection<String> getResults() {
+        return results;
+    }
+
+    /**
+     * List of project tags
+     */
+    public Collection<String> getTags() {
+        return tags;
+    }
+
+    /**
+     * List of reference resource UUIDs related to the requested project
+     */
+    public Collection<String> getReference() {
+        return reference;
+    }
+
+    /**
      * Words count
      */
     public int getWordCount() {
         return wordCount;
+    }
+
+    /**
+     * Linguist uuid
+     */
+    public String getLinguistUuid() {
+        return linguistUuid;
     }
 
     /**
@@ -168,68 +248,17 @@ public class ProjectDetails {
         return length;
     }
 
-    public String getCustom0() {
-        return custom0;
+    /**
+     * @return JsonObject of custom fields.
+     */
+    public JsonObject getCustomFields(){
+        return custom;
     }
 
-    public String getCustom1() {
-        return custom1;
+    /**
+     * @return JsonObject of resource binding.
+     */
+    public JsonObject getResourceBinding(){
+        return resourceBinding;
     }
-
-    public String getCustom2() {
-        return custom2;
-    }
-
-    public String getCustom3() {
-        return custom3;
-    }
-
-    public String getCustom4() {
-        return custom4;
-    }
-
-    public String getCustom5() {
-        return custom5;
-    }
-
-    public String getCustom6() {
-        return custom6;
-    }
-
-    public String getCustom7() {
-        return custom7;
-    }
-
-    public String getCustom8() {
-        return custom8;
-    }
-
-    public String getCustom9() {
-        return custom9;
-    }
-
-    // <editor-fold desc="private members">
-    private int projectId;
-    private String type;
-    private String statusCode;
-    private String sourceLanguage;
-    private String targetLanguage;
-    private Collection<String> sources;
-    private Collection<String> translations;
-    private Collection<String> proofs;
-    private Collection<String> transcriptions;
-    private int wordCount;
-    private int length;
-    private String custom0;
-    private String custom1;
-    private String custom2;
-    private String custom3;
-    private String custom4;
-    private String custom5;
-    private String custom6;
-    private String custom7;
-    private String custom8;
-    private String custom9;
-
-    //</editor-fold>
 }

@@ -13,6 +13,9 @@ import java.util.Map;
  */
 public class WordCount {
 
+    private int totalWordCount;
+    private Map<String, Integer> resources;
+
     public WordCount() {
     }
 
@@ -46,7 +49,4 @@ public class WordCount {
     public Map<String, Integer> getResources() {
         return resources;
     }
-
-    private int totalWordCount;
-    private Map<String, Integer> resources;
 }

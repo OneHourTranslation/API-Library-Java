@@ -7,6 +7,10 @@ import com.google.gson.JsonObject;
  */
 public class Project {
 
+    private int projectId;
+    private int wordCount;
+    private float credits;
+
     public Project() {
     }
 
@@ -38,8 +42,4 @@ public class Project {
     public float getCredits() {
         return credits;
     }
-
-    private int projectId;
-    private int wordCount;
-    private float credits;
 }

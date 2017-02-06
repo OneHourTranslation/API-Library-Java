@@ -9,6 +9,12 @@ import com.google.gson.JsonObject;
  */
 public class AccountDetails {
 
+    private int accountId;
+    private String accountUsername;
+    private float credits;
+    private String role;
+    private String uuid;
+
     public AccountDetails() {
     }
 
@@ -18,11 +24,9 @@ public class AccountDetails {
         this.accountId = object.get("account_id").getAsInt();
         this.accountUsername = object.get("account_username").getAsString();
         this.credits = object.get("credits").getAsFloat();
+        this.role = object.get("role").getAsString();
+        this.uuid = object.get("uuid").getAsString();
     }
-
-    private int accountId;
-    private String accountUsername;
-    private float credits;
 
     /**
      * Unique account id in OHT
@@ -41,7 +45,21 @@ public class AccountDetails {
     /**
      * Currently available credits balance
      */
-    public float getCredits() {
+    public float getAccountCredits() {
         return credits;
+    }
+
+    /**
+     * OHT role
+     */
+    public String getAccountRole() {
+        return role;
+    }
+
+    /**
+     * OHT uuid
+     */
+    public String getAccountUuid() {
+        return uuid;
     }
 }
