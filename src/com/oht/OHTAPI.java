@@ -15,8 +15,8 @@ public class OHTAPI {
 
     //<editor-fold desc="CONSTRUCTOR / PROPERTIES"
 
-    private static String baseUrl = "http://www.onehourtranslation.com/api/2";
-    private static String baseUrl_sandbox = "http://sandbox.onehourtranslation.com/api/2";
+    private static String baseUrl = "https://www.onehourtranslation.com/api/2";
+    private static String baseUrl_sandbox = "https://sandbox.onehourtranslation.com/api/2";
 
     private String secretKey = "";
     private String publicKey = "";

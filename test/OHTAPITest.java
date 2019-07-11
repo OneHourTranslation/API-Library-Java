@@ -1,3 +1,4 @@
+import com.google.gson.JsonObject;
 import com.oht.OHTAPI;
 
 import com.oht.OHTException;
@@ -11,22 +12,24 @@ import java.util.Collection;
 
 public class OHTAPITest {
 
-    private static OHTAPI api = new OHTAPI(System.getenv("oht_secret_key"), System.getenv("oht_public_key"), true);
+    private static OHTAPI api = new OHTAPI("EnterYourPrivateKeyHere", "EnterYourPublicKeyHere", true);
     private static OHTAPI api_wrong = new OHTAPI("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "bbbbbbbbbbbbbbbbbbb", true);
 
     private static String resource1String = "The quick brown fox jumps over the lazy dog.";
     private static String resource2String = "<text>The five boxing wizards jump quickly.</text>";
 
-    private static String custom0String = "This is custom 0 field";
-    private static String custom1String = "This is custom 1 field";
-    private static String custom2String = "This is custom 2 field";
-    private static String custom3String = "This is custom 3 field";
-    private static String custom4String = "This is custom 4 field";
-    private static String custom5String = "This is custom 5 field";
-    private static String custom6String = "This is custom 6 field";
-    private static String custom7String = "This is custom 7 field";
-    private static String custom8String = "This is custom 8 field";
-    private static String custom9String = "This is custom 9 field";
+    private static String[] customStrings = {
+        "This is custom 0 field",
+        "This is custom 1 field",
+        "This is custom 2 field",
+        "This is custom 3 field",
+        "This is custom 4 field",
+        "This is custom 5 field",
+        "This is custom 6 field",
+        "This is custom 7 field",
+        "This is custom 8 field",
+        "This is custom 9 field"
+    };
 
     @Test
     public void testWrongApiKeys() throws Exception {
@@ -34,7 +37,7 @@ public class OHTAPITest {
             api_wrong.getAccountDetails();
             Assert.fail("expected an OHTException to be thrown");
         } catch (OHTException ex) {
-            Assert.assertEquals(ex.getStatusCode(), 101);
+            Assert.assertEquals(ex.getStatusCode(), 102);
         }
     }
 
@@ -150,7 +153,8 @@ public class OHTAPITest {
                 , null
                 , null
                 , "my translation project"
-                , custom0String, custom1String, custom2String, custom3String, custom4String, custom5String, custom6String, custom7String, custom8String, custom9String);
+                , null
+                , customStrings);
 
         Assert.assertNotNull(project);
         Assert.assertTrue(project.getProjectId() > 0);
@@ -161,16 +165,11 @@ public class OHTAPITest {
         Assert.assertEquals("Translation", projectDetails.getType());
 
         // compare custom fields
-        Assert.assertEquals(custom0String, projectDetails.getCustom0());
-        Assert.assertEquals(custom1String, projectDetails.getCustom1());
-        Assert.assertEquals(custom2String, projectDetails.getCustom2());
-        Assert.assertEquals(custom3String, projectDetails.getCustom3());
-        Assert.assertEquals(custom4String, projectDetails.getCustom4());
-        Assert.assertEquals(custom5String, projectDetails.getCustom5());
-        Assert.assertEquals(custom6String, projectDetails.getCustom6());
-        Assert.assertEquals(custom7String, projectDetails.getCustom7());
-        Assert.assertEquals(custom8String, projectDetails.getCustom8());
-        Assert.assertEquals(custom9String, projectDetails.getCustom9());
+        JsonObject customFields = projectDetails.getCustomFields();
+        int i = 0;
+        for (String custom: customStrings) {
+            Assert.assertEquals(custom, customFields.get("api_custom_" + i++).getAsString());
+        }
     }
 
     @Test
@@ -186,7 +185,8 @@ public class OHTAPITest {
                 , null // expertise
                 , null // callback url
                 , "my proofreading project"
-                , custom0String, custom1String, custom2String, custom3String, custom4String, custom5String, custom6String, custom7String, custom8String, custom9String);
+                , null
+                , customStrings);
 
         Assert.assertNotNull(project);
         Assert.assertTrue(project.getProjectId() > 0);
@@ -197,16 +197,11 @@ public class OHTAPITest {
         Assert.assertEquals("Proofreading", projectDetails.getType());
 
         // compare custom fields
-        Assert.assertEquals(custom0String, projectDetails.getCustom0());
-        Assert.assertEquals(custom1String, projectDetails.getCustom1());
-        Assert.assertEquals(custom2String, projectDetails.getCustom2());
-        Assert.assertEquals(custom3String, projectDetails.getCustom3());
-        Assert.assertEquals(custom4String, projectDetails.getCustom4());
-        Assert.assertEquals(custom5String, projectDetails.getCustom5());
-        Assert.assertEquals(custom6String, projectDetails.getCustom6());
-        Assert.assertEquals(custom7String, projectDetails.getCustom7());
-        Assert.assertEquals(custom8String, projectDetails.getCustom8());
-        Assert.assertEquals(custom9String, projectDetails.getCustom9());
+        JsonObject customFields = projectDetails.getCustomFields();
+        int i = 0;
+        for (String custom: customStrings) {
+            Assert.assertEquals(custom, customFields.get("api_custom_" + i++).getAsString());
+        }
     }
 
     @Test
@@ -224,9 +219,11 @@ public class OHTAPITest {
                 , new String[]{resource2UUID}
                 , null // word count
                 , "proof translated project note"
+                , null
                 , null // callback url
                 , "my proof translated project"
-                , custom0String, custom1String, custom2String, custom3String, custom4String, custom5String, custom6String, custom7String, custom8String, custom9String);
+                , null
+                , customStrings);
 
         Assert.assertNotNull(project);
         Assert.assertTrue(project.getProjectId() > 0);
@@ -237,16 +234,11 @@ public class OHTAPITest {
         Assert.assertEquals("Proofreading", projectDetails.getType());
 
         // compare custom fields
-        Assert.assertEquals(custom0String, projectDetails.getCustom0());
-        Assert.assertEquals(custom1String, projectDetails.getCustom1());
-        Assert.assertEquals(custom2String, projectDetails.getCustom2());
-        Assert.assertEquals(custom3String, projectDetails.getCustom3());
-        Assert.assertEquals(custom4String, projectDetails.getCustom4());
-        Assert.assertEquals(custom5String, projectDetails.getCustom5());
-        Assert.assertEquals(custom6String, projectDetails.getCustom6());
-        Assert.assertEquals(custom7String, projectDetails.getCustom7());
-        Assert.assertEquals(custom8String, projectDetails.getCustom8());
-        Assert.assertEquals(custom9String, projectDetails.getCustom9());
+        JsonObject customFields = projectDetails.getCustomFields();
+        int i = 0;
+        for (String custom: customStrings) {
+            Assert.assertEquals(custom, customFields.get("api_custom_" + i++).getAsString());
+        }
     }
 
     @Test
@@ -259,9 +251,11 @@ public class OHTAPITest {
                 , new String[]{resource1UUID}
                 , null // length
                 , "transcription project note"
+                , null
                 , null // callback url
                 , "my transcription  project"
-                , custom0String, custom1String, custom2String, custom3String, custom4String, custom5String, custom6String, custom7String, custom8String, custom9String);
+                , null
+                , customStrings);
 
         Assert.assertNotNull(project);
         Assert.assertTrue(project.getProjectId() > 0);
@@ -271,17 +265,11 @@ public class OHTAPITest {
         Assert.assertNotNull(projectDetails);
         Assert.assertEquals("Transcription", projectDetails.getType());
 
-        // compare custom fields
-        Assert.assertEquals(custom0String, projectDetails.getCustom0());
-        Assert.assertEquals(custom1String, projectDetails.getCustom1());
-        Assert.assertEquals(custom2String, projectDetails.getCustom2());
-        Assert.assertEquals(custom3String, projectDetails.getCustom3());
-        Assert.assertEquals(custom4String, projectDetails.getCustom4());
-        Assert.assertEquals(custom5String, projectDetails.getCustom5());
-        Assert.assertEquals(custom6String, projectDetails.getCustom6());
-        Assert.assertEquals(custom7String, projectDetails.getCustom7());
-        Assert.assertEquals(custom8String, projectDetails.getCustom8());
-        Assert.assertEquals(custom9String, projectDetails.getCustom9());
+        JsonObject customFields = projectDetails.getCustomFields();
+        int i = 0;
+        for (String custom: customStrings) {
+            Assert.assertEquals(custom, customFields.get("api_custom_" + i++).getAsString());
+        }
     }
 
     @Test
@@ -294,9 +282,11 @@ public class OHTAPITest {
                 , new String[]{resource1UUID}
                 , null // length
                 , "transcription project note"
+                , null
                 , null // callback url
                 , "my transcription  project"
-                , null, null, null, null, null, null, null, null, null, null);
+                , null
+                , null);
 
         api.postProjectComment(project.getProjectId(), "this is my first project comment");
         api.postProjectComment(project.getProjectId(), "this is my second project comment");
@@ -304,40 +294,5 @@ public class OHTAPITest {
         Collection<Comment> comments = api.getProjectComments(project.getProjectId());
         Assert.assertNotNull(comments);
         Assert.assertFalse(comments.isEmpty());
-    }
-
-    @Test
-    public void testProjectRatings() throws Exception {
-        String resource1UUID = api.uploadFileResource("My test resource 1", null, null, resource1String);
-        Assert.assertNotNull(resource1UUID);
-
-        Project project = api.createTranscriptionProject
-                ("en-us"
-                , new String[]{resource1UUID}
-                , null // length
-                , "transcription project note"
-                , null // callback url
-                , "my transcription  project"
-                , null, null, null, null, null, null, null, null, null, null);
-
-        try {
-            api.postProjectRating(project.getProjectId(), "Service", 8, "my first service remark");
-            Assert.fail("expected an OHTException to be thrown");
-        } catch (OHTException ex) {
-            Assert.assertEquals(ex.getStatusCode(), 102);
-        }
-
-        try {
-            api.postProjectRating(project.getProjectId(), "Customer", 10, "my first customer's remark");
-            Assert.fail("expected an OHTException to be thrown");
-        } catch (OHTException ex) {
-            Assert.assertEquals(ex.getStatusCode(), 102);
-        }
-
-        Collection<Rating> ratings = api.retrieveProjectRatings(project.getProjectId());
-        Assert.assertNotNull(ratings);
-
-        // TODO: uncomment when postProjectRating call will be success
-        // Assert.assertFalse(ratings.isEmpty());
     }
 }
