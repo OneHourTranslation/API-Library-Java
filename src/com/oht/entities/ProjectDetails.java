@@ -6,8 +6,6 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents detailed specification of the project

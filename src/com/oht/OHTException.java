@@ -4,6 +4,9 @@ import com.google.gson.JsonArray;
 
 public class OHTException extends Exception
 {
+
+    private static final long serialVersionUID = 1L;
+
     public OHTException(int statusCode, String statusMessage, JsonArray errors)
     {
         super(String.format("Error %d: %s", statusCode, statusMessage));
